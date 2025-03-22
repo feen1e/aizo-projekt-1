@@ -9,13 +9,14 @@ class QuickSort {
 private:
     //int partition_method;
 
-    void quickSort(std::vector<T> &array, int left, int right) {
+    void quickSort(std::vector<T> &array, const int left, const int right) {
         if (left >= right) {
             return;
         }
 
         int border = partition(array, left, right);
 
+        // sort shorter part first
         if (border - left < right - border) {
             quickSort(array, left, border - 1);
             quickSort(array, border + 1, right);
@@ -25,7 +26,7 @@ private:
         }
     }
 
-    int partition(std::vector<T> &array, int left, int right) {
+    int partition(std::vector<T> &array, const int left, const int right) {
         choosePivot(array, left, right);
         T pivot = array[right]; // pivot is always on the right side
         int border = left - 1;
@@ -38,13 +39,11 @@ private:
         }
 
         border++;
-        //if (border != right) {
         std::swap(array[right], array[border]);
-        //}
         return border;
     }
 
-    void choosePivot(std::vector<T> &array, int left, int right) {
+    void choosePivot(std::vector<T> &array, const int left, const int right) {
 
         int mid = left + (right - left) / 2;
 

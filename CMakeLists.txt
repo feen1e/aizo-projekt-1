@@ -13,4 +13,8 @@ add_executable(aizo_projekt main.cpp
         quick_sort.cpp
         quick_sort.h
         utilities.cpp
-        utilities.h)
+        utilities.h
+        constants.h
+        hundred_results.cpp
+        hundred_results.h
+        main.h)
