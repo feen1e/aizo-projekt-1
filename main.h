@@ -1,5 +1,6 @@
 ﻿#ifndef MAIN_H
 #define MAIN_H
+#include <iostream>
 #include <vector>
 
 
@@ -19,8 +20,8 @@ public:
     void print_current_parameters() const;
     void generate_array();
     void load_array_from_file();
-    void sort_array();
-    void print_array();
+    void sort_array() const;
+    void print_array() const;
 };
 
 

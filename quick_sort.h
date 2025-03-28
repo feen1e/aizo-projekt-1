@@ -4,11 +4,12 @@
 #include <vector>
 
 
-template<typename T>
+
 class QuickSort {
 private:
-    //int partition_method;
+    int partition_method = 0; // 0 - skrajny lewy, 1 - skrajny prawy, 2 - mediana z trzech, 3 - losowy
 
+    template<typename T>
     void quickSort(std::vector<T> &array, const int left, const int right) {
         if (left >= right) {
             return;
@@ -16,7 +17,7 @@ private:
 
         int border = partition(array, left, right);
 
-        // sort shorter part first
+        // najpierw posortuj krótszą część
         if (border - left < right - border) {
             quickSort(array, left, border - 1);
             quickSort(array, border + 1, right);
@@ -26,9 +27,10 @@ private:
         }
     }
 
+    template<typename T>
     int partition(std::vector<T> &array, const int left, const int right) {
         choosePivot(array, left, right);
-        T pivot = array[right]; // pivot is always on the right side
+        T pivot = array[right]; // pivot jest zawsze po prawej
         int border = left - 1;
 
         for (int i = left; i < right; i++) {
@@ -43,30 +45,56 @@ private:
         return border;
     }
 
+    template<typename T>
     void choosePivot(std::vector<T> &array, const int left, const int right) {
-
-        int mid = left + (right - left) / 2;
-
-        // sort array[left], array[mid], array[right] to find the median
-        if (array[mid] < array[left]) {
-            std::swap(array[mid], array[left]);
+        switch (partition_method) {
+            case 0: { // skrajny lewy
+                std::swap(array[left], array[right]);
+                break;
+            }
+            case 1: { // skrajny prawy
+                break;
+            }
+            case 2: { // mediana z trzech
+                int mid = left + (right - left) / 2;
+                if (array[mid] < array[left]) {
+                    std::swap(array[mid], array[left]);
+                }
+                if (array[right] < array[left]) {
+                    std::swap(array[right], array[left]);
+                }
+                if (array[right] < array[mid]) {
+                    std::swap(array[right], array[mid]);
+                }
+                std::swap(array[mid], array[right]);
+                break;
+            }
+            case 3: { // losowy
+                int r = left + rand() % (right - left + 1);
+                std::swap(array[r], array[right]);
+                break;
+            }
+            default: {
+                throw std::invalid_argument("Błąd. Dana metoda wybrania pivota nie istnieje.");
+                break;
+            }
         }
-        if (array[right] < array[left]) {
-            std::swap(array[right], array[left]);
-        }
-        if (array[right] < array[mid]) {
-            std::swap(array[right], array[mid]);
-        }
-
-        // move median to the end
-        std::swap(array[mid], array[right]);
     }
 
 public:
+    void setPartitionMethod(const int method) {
+        partition_method = method;
+    }
+
+    template<typename T>
     void sort(std::vector<T> &array) {
         if (!array.empty()) {
+            if (partition_method == 3) {
+                srand(time(nullptr));
+            }
             quickSort(array, 0, array.size() - 1);
         }
+
     }
 };
 

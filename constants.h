@@ -19,8 +19,8 @@ inline const std::string CHANGE_SORTING_ALGORITHM = R"CSA(
 --------Wybór algorytmu sortowania--------
 1 - Sortowanie przez wstawianie
 2 - Sortowanie przez kopcowanie
-3 - Sortowanie Shella - algorytm 1
-4 - Sortowanie Shella - algorytm 2
+3 - Sortowanie Shella - wzór Shella
+4 - Sortowanie Shella - wzór Tokudy
 5 - Sortowanie szybkie - skrajny lewy
 6 - Sortowanie szybkie - skrajny prawy
 7 - Sortowanie szybkie - mediana z trzech
@@ -41,5 +41,9 @@ Wprowadź liczbę elementów: )CS";
 
 inline const std::string WRITE_NUMBER = R"WN(
 Wprowadź numer wybranej opcji: )WN";
+
+inline const std::string PRINT_ARRAY = R"PA(
+------------Zawartość tablicy-------------
+)PA";
 
 #endif //CONSTANTS_H

@@ -4,9 +4,9 @@
 
 
 
-template <typename T>
 class InsertionSort {
 public:
+    template <typename T>
      void sort(std::vector<T> &array) {
         for (size_t i = 1; i < array.size(); i++) {
             T current = array[i];

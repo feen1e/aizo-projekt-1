@@ -4,9 +4,9 @@
 
 
 
-template <typename T>
 class HeapSort {
 private:
+    template <typename T>
     void heapify(std::vector<T>& array, const int n, const int i) {
         // znajdowanie najwiekszej wartosci sposrod rodzica i dzieci
         int largest = i;
@@ -27,6 +27,7 @@ private:
     }
 
 public:
+    template <typename T>
     void sort(std::vector<T>& array) {
         const int n = array.size();
         for (int i = n / 2 - 1; i >= 0; i--) {
