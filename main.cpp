@@ -17,23 +17,25 @@ int main() {
 
     menu();
 
-    /*Utilities<int> intHelper;
+   /*Utilities<int> intHelper;
    Utilities<float> floatHelper;
    std::chrono::steady_clock::time_point start;
    std::chrono::steady_clock::time_point end;
    std::vector<int> array = {7, 5, 4, 3, 2, 1};
    std::vector<float> array2 = {12.42, 12.11, 56.23, 1.23, 6.32};
 
-   HeapSort<int> intHeap;
-   HeapSort<float> floatHeap;
+   ShellSort<int> intShell;
+   ShellSort<float> floatShell;
+    intShell.setFormula(true);
+    floatShell.setFormula(true);
 
    start = std::chrono::steady_clock::now();
-   intHeap.sort(array);
+   intShell.sort(array);
    end = std::chrono::steady_clock::now();
    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
    start = std::chrono::steady_clock::now();
-   floatHeap.sort(array2);
+   floatShell.sort(array2);
    end = std::chrono::steady_clock::now();
    std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
