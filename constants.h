@@ -11,9 +11,18 @@ inline const std::string MENU = R"MENU(
 5 - Wyświetl tablicę
 6 - Zmień algorytm sortowania
 7 - Posortuj tablicę
+8 - Porównanie czasu sortowań
 0 - Zakończ działanie programu
 ------------------------------------------
 )MENU";
+
+inline const std::string COMPARE_SORTS = R"CS(
+--------Porównanie czasu sortowań---------
+Funkcja ta spowoduje utworzenie pliku results.txt
+zawierającego czasy sortowania każdego z algorytmów
+dla dwóch typów danych o różnych długościach tablic.
+Wykonanie może zająć dużo czasu.
+Czy chcesz kontynuować? (T/N) )CS";
 
 inline const std::string CHANGE_SORTING_ALGORITHM = R"CSA(
 --------Wybór algorytmu sortowania--------

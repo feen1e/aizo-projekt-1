@@ -62,9 +62,14 @@ void menu() {
                 break;
             }
             case 8: {
-                ComparisonGenerator results;
-                results.get_results();
-                // TODO
+                std::cout << COMPARE_SORTS;
+                char a;
+                std::cin >> a;
+                if (a == 't' || a == 'T') {
+                    ComparisonGenerator::get_results();
+                } else {
+                    std::cout << "Wykonanie anulowane.\n";
+                }
                 break;
             }
             default: break;
@@ -259,7 +264,6 @@ void Main::sort_array() const {
             if (is_int) {
                 sort_and_print(int_array_copy, quick_sort);
             } else {
-                quick_sort.setPartitionMethod(partition_method);
                 sort_and_print(float_array_copy, quick_sort);
             }
             break;
