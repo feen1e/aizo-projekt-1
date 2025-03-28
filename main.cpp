@@ -3,18 +3,20 @@
 #include <chrono>
 #include <random>
 #include <windows.h>
+
+#include "array_loader.h"
+#include "comparison_generator.h"
 #include "constants.h"
-#include "utilities.h"
-#include "insertion_sort.h"
 #include "heap_sort.h"
-#include "shell_sort.h"
+#include "insertion_sort.h"
 #include "quick_sort.h"
-#include "hundred_results.h"
+#include "shell_sort.h"
+#include "utilities.h"
 
 void menu();
 
 int main() {
-    SetConsoleOutputCP(65001);
+    SetConsoleOutputCP(65001); // Włączenie UTF-8 w konsoli, żeby poprawnie wyświetlać polskie znaki
 
     menu();
 
@@ -60,7 +62,7 @@ void menu() {
                 break;
             }
             case 8: {
-                HundredResults results;
+                ComparisonGenerator results;
                 results.get_results();
                 // TODO
                 break;
@@ -151,7 +153,6 @@ void Main::generate_array() {
         for (int i = 0; i < Main::array_size; i++) {
             int_array[i] = dis(gen);
         }
-
     } else if (Main::current_type == 2) {
         float_array = std::vector<float>(Main::array_size);
         std::random_device rd;
@@ -161,14 +162,20 @@ void Main::generate_array() {
         for (int i = 0; i < Main::array_size; i++) {
             float_array[i] = dis(gen);
         }
-
     } else {
         throw std::invalid_argument("Błąd. Taki typ nie istnieje.");
     }
 }
 
 void Main::load_array_from_file() {
-    // TODO
+    std::string filename;
+    std::cout << LOAD_FILE;
+    std::cin >> filename;
+    if (Main::current_type == 1) {
+        Main::array_size = ArrayLoader::loadArrayFromFile(filename, int_array);
+    } else {
+        Main::array_size = ArrayLoader::loadArrayFromFile(filename, float_array);
+    }
 }
 
 void Main::change_sorting_algorithm() {
@@ -180,8 +187,8 @@ void Main::change_sorting_algorithm() {
     Main::sorting_algorithm = s;
 }
 
-template <typename T, typename Sorter>
-void sort_and_print(std::vector<T>& array, Sorter sorter) {
+template<typename T, typename Sorter>
+void sort_and_print(std::vector<T> &array, Sorter sorter) {
     const auto start = std::chrono::steady_clock::now();
     sorter.sort(array);
     const auto end = std::chrono::steady_clock::now();
@@ -210,14 +217,16 @@ void Main::sort_array() const {
 
     // Sortowanie według wybranego algorytmu
     switch (Main::sorting_algorithm) {
-        case 1: {  // Insertion Sort
+        case 1: {
+            // Insertion Sort
             if (is_int)
                 sort_and_print(int_array_copy, InsertionSort());
             else
                 sort_and_print(float_array_copy, InsertionSort());
             break;
         }
-        case 2: {  // Heap Sort
+        case 2: {
+            // Heap Sort
             if (is_int)
                 sort_and_print(int_array_copy, HeapSort());
             else
@@ -225,12 +234,12 @@ void Main::sort_array() const {
             break;
         }
         case 3:
-        case 4: { // Shell Sort; jeśli wybrano 4, to używamy wzoru Tokudy; w przeciwnym wypadku Shella
+        case 4: {
+            // Shell Sort; jeśli wybrano 4, to używamy wzoru Tokudy; w przeciwnym wypadku Shella
             const bool use_tokuda = (Main::sorting_algorithm == 4);
             ShellSort shell_sort;
             shell_sort.setTokudaFormula(use_tokuda);
             if (is_int) {
-
                 sort_and_print(int_array_copy, shell_sort);
             } else {
                 sort_and_print(float_array_copy, shell_sort);
@@ -240,14 +249,14 @@ void Main::sort_array() const {
         case 5:
         case 6:
         case 7:
-        case 8: {  // Quick Sort; algorytmy wybierania pivota to wartości od 0 do 3 więc odejmujemy 5 od wybranej opcji
+        case 8: {
+            // Quick Sort; algorytmy wybierania pivota to wartości od 0 do 3 więc odejmujemy 5 od wybranej opcji
             const int partition_method = Main::sorting_algorithm - 5;
             QuickSort quick_sort;
             quick_sort.setPartitionMethod(partition_method);
             if (is_int) {
                 sort_and_print(int_array_copy, quick_sort);
             } else {
-
                 quick_sort.setPartitionMethod(partition_method);
                 sort_and_print(float_array_copy, quick_sort);
             }

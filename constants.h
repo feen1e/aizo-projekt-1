@@ -46,4 +46,8 @@ inline const std::string PRINT_ARRAY = R"PA(
 ------------Zawartość tablicy-------------
 )PA";
 
+inline const std::string LOAD_FILE = R"LF(
+------------Wczytywanie pliku-------------
+Wprowadź ścieżkę do pliku: )LF";
+
 #endif //CONSTANTS_H
