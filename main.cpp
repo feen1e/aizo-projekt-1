@@ -135,6 +135,8 @@ void Main::change_type() {
 }
 
 void Main::change_size() {
+    Main::int_array.clear();
+    Main::float_array.clear();
     size_t size;
     do {
         std::cout << CHANGE_SIZE;

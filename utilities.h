@@ -10,7 +10,8 @@ class Utilities {
 public:
     static void print_time(const std::chrono::steady_clock::time_point start, const std::chrono::steady_clock::time_point end) {
         std::cout << "------------------------------------------\n";
-        std::cout << "Czas sortowania: " << (end - start) << std::endl;
+        std::cout << "Czas sortowania: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
+        << " (" << (end - start) << ")." << std::endl;
         std::cout << "------------------------------------------\n";
     }
 
