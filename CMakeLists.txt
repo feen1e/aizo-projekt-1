@@ -15,6 +15,8 @@ add_executable(aizo_projekt main.cpp
         utilities.cpp
         utilities.h
         constants.h
-        hundred_results.cpp
-        hundred_results.h
-        main.h)
+        comparison_generator.cpp
+        comparison_generator.h
+        main.h
+        array_loader.cpp
+        array_loader.h)
