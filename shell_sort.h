@@ -3,7 +3,9 @@
 
 
 
-class shell_sort {
+template <typename T>
+class ShellSort {
+public:
 
 };
 

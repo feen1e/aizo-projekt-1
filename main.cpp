@@ -16,9 +16,33 @@ int main() {
     SetConsoleOutputCP(65001);
 
     menu();
+
+    /*Utilities<int> intHelper;
+   Utilities<float> floatHelper;
+   std::chrono::steady_clock::time_point start;
+   std::chrono::steady_clock::time_point end;
+   std::vector<int> array = {7, 5, 4, 3, 2, 1};
+   std::vector<float> array2 = {12.42, 12.11, 56.23, 1.23, 6.32};
+
+   HeapSort<int> intHeap;
+   HeapSort<float> floatHeap;
+
+   start = std::chrono::steady_clock::now();
+   intHeap.sort(array);
+   end = std::chrono::steady_clock::now();
+   std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+   start = std::chrono::steady_clock::now();
+   floatHeap.sort(array2);
+   end = std::chrono::steady_clock::now();
+   std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
+
+   intHelper.printArray(array);
+   floatHelper.printArray(array2);*/
+
     return 0;
 
-    Utilities<int> intHelper;
+    /*Utilities<int> intHelper;
     Utilities<float> floatHelper;
     std::chrono::steady_clock::time_point start;
     std::chrono::steady_clock::time_point end;
@@ -45,7 +69,7 @@ int main() {
     std::cout << std::chrono::duration_cast<std::chrono::milliseconds>(end - start) << std::endl;
 
     intHelper.printArray(array);
-    floatHelper.printArray(array2);
+    floatHelper.printArray(array2);*/
 }
 
 void menu() {
@@ -117,27 +141,27 @@ void Main::print_current_parameters() const {
             break;
         }
         case 3: {
-            algorithm = "Shella - algorytm 1";
+            algorithm = "Shella (wzór Shella)";
             break;
         }
         case 4: {
-            algorithm = "Shella - algorytm 2";
+            algorithm = "Shella (wzór Tokudy)";
             break;
         }
         case 5: {
-            algorithm = "szybkie - pivot skrajny lewy";
+            algorithm = "szybkie (pivot skrajny lewy)";
             break;
         }
         case 6: {
-            algorithm = "szybkie - pivot skrajny prawy";
+            algorithm = "szybkie (pivot skrajny prawy)";
             break;
         }
         case 7: {
-            algorithm = "szybkie - pivot mediany z trzech";
+            algorithm = "szybkie (pivot mediany z trzech)";
             break;
         }
         case 8: {
-            algorithm = "szybkie - pivot losowy";
+            algorithm = "szybkie (pivot losowy)";
             break;
         }
         default: break;
