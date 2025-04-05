@@ -14,7 +14,7 @@ private:
         std::vector<int> gaps;
         int k = 0;
         while (true) {
-            int gap = std::ceil((9 * (std::pow(9.0 / 4.0, k)) - 4) / 5);
+            int gap = std::ceil((9 * (std::pow(9.0 / 4.0, k-1)) - 4) / 5);
             if (gap >= n) {
                 break;
             }

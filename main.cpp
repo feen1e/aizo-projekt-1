@@ -113,7 +113,7 @@ void Main::print_current_parameters() const {
             break;
         }
         case 7: {
-            algorithm = "szybkie (pivot mediany z trzech)";
+            algorithm = "szybkie (pivot środkowy)";
             break;
         }
         case 8: {

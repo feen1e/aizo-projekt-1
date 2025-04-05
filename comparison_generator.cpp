@@ -3,7 +3,11 @@
 #include <chrono>
 #include <fstream>
 #include <future>
+#include <iosfwd>
+#include <iosfwd>
 #include <random>
+#include <vector>
+#include <vector>
 
 #include "heap_sort.h"
 #include "insertion_sort.h"
@@ -13,7 +17,7 @@
 
 static int array_generation_method = 0;
 static int index = 1;
-static size_t base_size = 10000;
+static size_t base_size = 100;
 
 class Sorting {
 public:
@@ -37,20 +41,21 @@ public:
 
     void generate_two_thirds();
 
-    static void generate_results(std::vector<std::string> &results, const std::vector<std::tuple<int, int> > &sorting_configs);
+    static void generate_results(::std::ofstream &result_file,
+                                 const std::vector<std::tuple<int, int> > &sorting_configs);
 
     void sort_array();
 
-    void sort_100_times_10_increments(std::string &results);
+    void sort_100_times_10_increments(std::ofstream &result_file);
 };
 
 
 void ComparisonGenerator::get_results() {
-    std::ofstream random_results_file("random_results.csv");
-    std::ofstream sorted_results_file("sorted_results.csv");
-    std::ofstream reversed_results_file("reversed_results.csv");
-    std::ofstream one_third_results_file("one_third_results.csv");
-    std::ofstream two_thirds_results_file("two_thirds_results.csv");
+    std::ofstream random_results_file("1_random_results.csv");
+    std::ofstream sorted_results_file("2_sorted_results.csv");
+    std::ofstream reversed_results_file("3_reversed_results.csv");
+    std::ofstream one_third_results_file("4_one_third_results.csv");
+    std::ofstream two_thirds_results_file("5_two_thirds_results.csv");
 
     std::vector<std::ofstream> results_files;
     results_files.push_back(std::move(random_results_file));
@@ -79,50 +84,29 @@ void ComparisonGenerator::get_results() {
         {2, 8}
     };
 
-    std::vector<std::string> random_results;
-    std::vector<std::string> sorted_results;
-    std::vector<std::string> reversed_results;
-    std::vector<std::string> one_third_results;
-    std::vector<std::string> two_thirds_results;
-
-    std::vector<std::vector<std::string> > results_vector;
-    results_vector.push_back(random_results);
-    results_vector.push_back(sorted_results);
-    results_vector.push_back(reversed_results);
-    results_vector.push_back(one_third_results);
-    results_vector.push_back(two_thirds_results);
-
-    for (auto& result: results_vector) {
-        Sorting::generate_results(result, sorting_configs);
+    std::string header = "typ;liczba elementów;algorytm sortowania;średni czas sortowania\n";
+    for (auto &result_file: results_files) {
+        result_file << header;
+        Sorting::generate_results(result_file, sorting_configs);
+        result_file.close();
         array_generation_method++;
         if (array_generation_method > 4) {
             break;
         }
     }
-
-    std::string header = "typ;liczba elementów;algorytm sortowania;czas sortowania\n";
-    for (int i = 0; i < results_vector.size(); i++) {
-        results_files[i] << header;
-        for (const auto &result: results_vector[i]) {
-            results_files[i] << result;
-        }
-        results_files[i].close();
-    }
 }
 
 
-void Sorting::generate_results(std::vector<std::string> &results,
+void Sorting::generate_results(std::ofstream &result_file,
                                const std::vector<std::tuple<int, int> > &sorting_configs) {
     for (const auto &[type, algorithm]: sorting_configs) {
-        std::string result;
         Sorting sorting_instance;
         sorting_instance.current_type = type;
         sorting_instance.sorting_algorithm = algorithm;
 
-        std::cout << index++ << "/" << sorting_configs.size() * 5 << " Postęp sortowania: " << std::endl;
-        sorting_instance.sort_100_times_10_increments(result);
-
-        results.push_back(result);
+        std::cout << "\n[" << index++ << "/" << sorting_configs.size() * 5 << "] ";
+        sorting_instance.sort_100_times_10_increments(result_file);
+        std::cout << "✓\n";
     }
 }
 
@@ -180,83 +164,81 @@ void Sorting::generate_random() {
 
 void Sorting::generate_sorted() {
     if (current_type == 1) {
-        const int delta = std::uniform_int_distribution<int>(-100, 100)(gen);
         int_array = std::vector<int>(array_size);
+        std::uniform_int_distribution<int> dis(-1000, 1000);
         for (size_t i = 0; i < array_size; i++) {
-            int_array[i] = i + delta;
+            int_array[i] = dis(gen);
         }
+        std::ranges::sort(int_array);
     } else if (current_type == 2) {
-        const float delta = std::uniform_real_distribution<float>(-100.0, 100.0)(gen);
         float_array = std::vector<float>(array_size);
+        std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
         for (size_t i = 0; i < array_size; i++) {
-            float_array[i] = i + delta;
+            float_array[i] = dis(gen);
         }
+        std::ranges::sort(float_array);
     }
 }
 
 void Sorting::generate_reversed() {
     if (current_type == 1) {
-        const int delta = std::uniform_int_distribution<int>(-100, 100)(gen);
         int_array = std::vector<int>(array_size);
+        std::uniform_int_distribution<int> dis(-1000, 1000);
         for (size_t i = 0; i < array_size; i++) {
-            int_array[i] = static_cast<int>(array_size - i + delta);
+            int_array[i] = dis(gen);
         }
+        std::ranges::sort(int_array);
+        std::ranges::reverse(int_array);
     } else if (current_type == 2) {
-        const float delta = std::uniform_real_distribution<float>(-100.0, 100.0)(gen);
         float_array = std::vector<float>(array_size);
+        std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
         for (size_t i = 0; i < array_size; i++) {
-            float_array[i] = static_cast<float>(array_size - i) + delta;
+            float_array[i] = dis(gen);
         }
+        std::ranges::sort(float_array);
+        std::ranges::reverse(float_array);
     }
 }
 
 void Sorting::generate_one_third() {
     const size_t third = array_size / 3;
     if (current_type == 1) {
-        const int delta = std::uniform_int_distribution<int>(-100, 100)(gen);
         int_array = std::vector<int>(array_size);
-        for (size_t i = 0; i < third; i++) {
-            int_array[i] = i + delta;
-        }
         std::uniform_int_distribution<int> dis(-1000, 1000);
-        for (size_t i = third; i < array_size; i++) {
+        for (size_t i = 0; i < array_size; i++) {
             int_array[i] = dis(gen);
         }
+        std::ranges::sort(int_array);
+        std::shuffle(int_array.begin() + third, int_array.end(), gen);
     } else if (current_type == 2) {
-        const float delta = std::uniform_real_distribution<float>(-100.0, 100.0)(gen);
         float_array = std::vector<float>(array_size);
-        for (size_t i = 0; i < third; i++) {
-            float_array[i] = i + delta;
-        }
         std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
-        for (size_t i = third; i < array_size; i++) {
+        for (size_t i = 0; i < array_size; i++) {
             float_array[i] = dis(gen);
         }
+        std::ranges::sort(float_array);
+        std::shuffle(float_array.begin() + third, float_array.end(), gen);
     }
 }
 
 void Sorting::generate_two_thirds() {
     const size_t two_thirds = array_size * 2 / 3;
     if (current_type == 1) {
-        const int delta = std::uniform_int_distribution<int>(-100, 100)(gen);
         int_array = std::vector<int>(array_size);
-        for (size_t i = 0; i < two_thirds; i++) {
-            int_array[i] = i + delta;
-        }
         std::uniform_int_distribution<int> dis(-1000, 1000);
-        for (size_t i = two_thirds; i < array_size; i++) {
+        for (size_t i = 0; i < array_size; i++) {
             int_array[i] = dis(gen);
         }
+        std::ranges::sort(int_array);
+        std::shuffle(int_array.begin() + two_thirds, int_array.end(), gen);
     } else if (current_type == 2) {
-        const float delta = std::uniform_real_distribution<float>(-100.0, 100.0)(gen);
         float_array = std::vector<float>(array_size);
-        for (size_t i = 0; i < two_thirds; i++) {
-            float_array[i] = i + delta;
-        }
         std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
-        for (size_t i = two_thirds; i < array_size; i++) {
+        for (size_t i = 0; i < array_size; i++) {
             float_array[i] = dis(gen);
         }
+        std::ranges::sort(float_array);
+        std::shuffle(float_array.begin() + two_thirds, float_array.end(), gen);
     }
 }
 
@@ -317,66 +299,70 @@ void Sorting::sort_array() {
     }
 }
 
-void Sorting::sort_100_times_10_increments(std::string &results) {
+void Sorting::sort_100_times_10_increments(std::ofstream &result_file) {
     for (int n = 1; n <= 10; n++) {
-        if (sorting_algorithm == 1 || ((sorting_algorithm == 5 || sorting_algorithm == 6)
-            && (array_generation_method == 1 || array_generation_method == 2)) ||
-            ((sorting_algorithm == 6 || sorting_algorithm == 5) && array_generation_method == 4)) {
+        if (sorting_algorithm == 1) {
+            array_size = base_size / 10 * n + base_size / 2;
+        } else if ((sorting_algorithm == 5 || sorting_algorithm == 6)
+                   && (array_generation_method == 1 || array_generation_method == 2 || array_generation_method == 3 ||
+                       array_generation_method == 4)) {
             array_size = base_size / 10 * n;
         } else {
             array_size = base_size * n;
         }
+        int total_sort_duration = 0;
         for (int i = 0; i < 100; i++) {
             generate_array();
             sort_array();
-
-            std::string data_type;
-            if (current_type == 1) {
-                data_type = "int";
-            } else {
-                data_type = "float";
-            }
-
-            std::string algorithm;
-            switch (sorting_algorithm) {
-                case 1: {
-                    algorithm = "Przez wstawianie";
-                    break;
-                }
-                case 2: {
-                    algorithm = "Przez kopcowanie";
-                    break;
-                }
-                case 3: {
-                    algorithm = "Shella (wzór Shella)";
-                    break;
-                }
-                case 4: {
-                    algorithm = "Shella (wzór Tokudy)";
-                    break;
-                }
-                case 5: {
-                    algorithm = "Szybkie (pivot skrajny lewy)";
-                    break;
-                }
-                case 6: {
-                    algorithm = "Szybkie (pivot skrajny prawy)";
-                    break;
-                }
-                case 7: {
-                    algorithm = "Szybkie (pivot mediany z trzech)";
-                    break;
-                }
-                case 8: {
-                    algorithm = "Szybkie (pivot losowy)";
-                    break;
-                }
-                default: break;
-            }
-            //std::cout << "|";
-            results += data_type + ";" + std::to_string(array_size) + ";" + algorithm + ";" + std::to_string(
-                sort_duration) + "\n";
+            total_sort_duration += sort_duration;
         }
-        //std::cout << std::endl;
+        std::string data_type;
+        if (current_type == 1) {
+            data_type = "int";
+        } else {
+            data_type = "float";
+        }
+
+        std::string algorithm;
+        switch (sorting_algorithm) {
+            case 1: {
+                algorithm = "Przez wstawianie";
+                break;
+            }
+            case 2: {
+                algorithm = "Przez kopcowanie";
+                break;
+            }
+            case 3: {
+                algorithm = "Shella (wzór Shella)";
+                break;
+            }
+            case 4: {
+                algorithm = "Shella (wzór Tokudy)";
+                break;
+            }
+            case 5: {
+                algorithm = "Szybkie (pivot skrajny lewy)";
+                break;
+            }
+            case 6: {
+                algorithm = "Szybkie (pivot skrajny prawy)";
+                break;
+            }
+            case 7: {
+                algorithm = "Szybkie (pivot środkowy)";
+                break;
+            }
+            case 8: {
+                algorithm = "Szybkie (pivot losowy)";
+                break;
+            }
+            default: break;
+        }
+        total_sort_duration /= 100;
+        result_file << data_type + ";" + std::to_string(array_size) + ";" + algorithm + ";" + std::to_string(
+            total_sort_duration) + "\n";
+
+        std::cout << ". ";
     }
 }

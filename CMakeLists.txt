@@ -14,3 +14,7 @@ add_executable(aizo_projekt main.cpp
         comparison_generator.h
         main.h
         array_loader.h)
+
+if(MINGW)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()

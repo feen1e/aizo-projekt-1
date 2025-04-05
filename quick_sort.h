@@ -7,7 +7,7 @@
 
 class QuickSort {
 private:
-    int partition_method = 0; // 0 - skrajny lewy, 1 - skrajny prawy, 2 - mediana z trzech, 3 - losowy
+    int partition_method = 0; // 0 - skrajny lewy, 1 - skrajny prawy, 2 - środkowy, 3 - losowy
 
     template<typename T>
     void quickSort(std::vector<T> &array, const int left, const int right) {
@@ -55,17 +55,8 @@ private:
             case 1: { // skrajny prawy
                 break;
             }
-            case 2: { // mediana z trzech
+            case 2: { // środkowy
                 int mid = left + (right - left) / 2;
-                if (array[mid] < array[left]) {
-                    std::swap(array[mid], array[left]);
-                }
-                if (array[right] < array[left]) {
-                    std::swap(array[right], array[left]);
-                }
-                if (array[right] < array[mid]) {
-                    std::swap(array[right], array[mid]);
-                }
                 std::swap(array[mid], array[right]);
                 break;
             }

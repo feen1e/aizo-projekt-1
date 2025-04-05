@@ -32,7 +32,7 @@ inline const std::string CHANGE_SORTING_ALGORITHM = R"CSA(
 4 - Sortowanie Shella - wzór Tokudy
 5 - Sortowanie szybkie - skrajny lewy
 6 - Sortowanie szybkie - skrajny prawy
-7 - Sortowanie szybkie - mediana z trzech
+7 - Sortowanie szybkie - środkowy
 8 - Sortowanie szybkie - losowy
 ------------------------------------------
 Wprowadź numer wybranej opcji: )CSA";
