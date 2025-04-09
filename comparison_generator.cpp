@@ -2,11 +2,7 @@
 
 #include <chrono>
 #include <fstream>
-#include <future>
-#include <iosfwd>
-#include <iosfwd>
 #include <random>
-#include <vector>
 #include <vector>
 
 #include "heap_sort.h"
