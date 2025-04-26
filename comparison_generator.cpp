@@ -4,6 +4,7 @@
 #include <fstream>
 #include <random>
 #include <vector>
+#include <filesystem>
 
 #include "heap_sort.h"
 #include "insertion_sort.h"
@@ -13,7 +14,8 @@
 
 static int array_generation_method = 0;
 static int index = 1;
-static size_t base_size = 100;
+static int file_index = 1;
+static size_t base_size = 10000;
 
 class Sorting {
 public:
@@ -37,8 +39,7 @@ public:
 
     void generate_two_thirds();
 
-    static void generate_results(::std::ofstream &result_file,
-                                 const std::vector<std::tuple<int, int> > &sorting_configs);
+    static void generate_results(std::ofstream &result_file, const std::vector<std::tuple<int, int> > &sorting_configs);
 
     void sort_array();
 
@@ -47,11 +48,12 @@ public:
 
 
 void ComparisonGenerator::get_results() {
-    std::ofstream random_results_file("1_random_results.csv");
-    std::ofstream sorted_results_file("2_sorted_results.csv");
-    std::ofstream reversed_results_file("3_reversed_results.csv");
-    std::ofstream one_third_results_file("4_one_third_results.csv");
-    std::ofstream two_thirds_results_file("5_two_thirds_results.csv");
+    std::filesystem::create_directories("results");
+    std::ofstream random_results_file("results/1_random_results.csv");
+    std::ofstream sorted_results_file("results/2_sorted_results.csv");
+    std::ofstream reversed_results_file("results/3_reversed_results.csv");
+    std::ofstream one_third_results_file("results/4_one_third_results.csv");
+    std::ofstream two_thirds_results_file("results/5_two_thirds_results.csv");
 
     std::vector<std::ofstream> results_files;
     results_files.push_back(std::move(random_results_file));
@@ -80,7 +82,11 @@ void ComparisonGenerator::get_results() {
         {2, 8}
     };
 
-    std::string header = "typ;liczba elementów;algorytm sortowania;średni czas sortowania\n";
+    index = 1;
+    file_index = 1;
+    array_generation_method = 0;
+
+    std::string header = "typ,liczba elementów,średni czas sortowania,algorytm sortowania\n";
     for (auto &result_file: results_files) {
         result_file << header;
         Sorting::generate_results(result_file, sorting_configs);
@@ -100,10 +106,12 @@ void Sorting::generate_results(std::ofstream &result_file,
         sorting_instance.current_type = type;
         sorting_instance.sorting_algorithm = algorithm;
 
-        std::cout << "\n[" << index++ << "/" << sorting_configs.size() * 5 << "] ";
+        std::cout << "\n[" << index++ << "/" << sorting_configs.size() * 5 << "] (" << file_index << "/5 - " << type <<
+                "/2 - " << algorithm << "/8)" << std::endl;
         sorting_instance.sort_100_times_10_increments(result_file);
         std::cout << "✓\n";
     }
+    file_index++;
 }
 
 template<typename T, typename Sorter>
@@ -306,7 +314,7 @@ void Sorting::sort_100_times_10_increments(std::ofstream &result_file) {
         } else {
             array_size = base_size * n;
         }
-        int total_sort_duration = 0;
+        double total_sort_duration = 0;
         for (int i = 0; i < 100; i++) {
             generate_array();
             sort_array();
@@ -355,10 +363,10 @@ void Sorting::sort_100_times_10_increments(std::ofstream &result_file) {
             }
             default: break;
         }
+        std::cout << ". avg ";
         total_sort_duration /= 100;
-        result_file << data_type + ";" + std::to_string(array_size) + ";" + algorithm + ";" + std::to_string(
-            total_sort_duration) + "\n";
-
-        std::cout << ". ";
+        std::cout << total_sort_duration << " ms" << std::endl;
+        result_file << data_type + "," + std::to_string(array_size) + "," + std::to_string(total_sort_duration) + "," +
+                algorithm + "\n";
     }
 }
