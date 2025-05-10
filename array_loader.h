@@ -6,7 +6,7 @@
 #include <vector>
 
 
-
+// ładowanie tablicy z pliku
 class ArrayLoader {
 public:
     template <typename T>
@@ -17,7 +17,7 @@ public:
             std::cerr << "Nie można otworzyć pliku" << std::endl;
         }
 
-        int n;
+        int n; // pierwsza liczba to długość tablicy
         file >> n;
         array = std::vector<T>(n);
 

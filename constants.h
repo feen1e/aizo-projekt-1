@@ -2,6 +2,8 @@
 #define CONSTANTS_H
 #include <string>
 
+// Plik zawierający stałe tekstowe używane w programie
+
 inline const std::string MENU = R"MENU(
 -------------------Menu-------------------
 1 - Zmień typ elementów tablicy

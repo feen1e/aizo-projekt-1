@@ -17,12 +17,11 @@ void menu();
 
 int main() {
     SetConsoleOutputCP(65001); // Włączenie UTF-8 w konsoli, żeby poprawnie wyświetlać polskie znaki
-
     menu();
-
     return 0;
 }
 
+// Główne menu aplikacji
 void menu() {
     Main app;
 
@@ -34,34 +33,34 @@ void menu() {
         std::cin >> option;
         switch (option) {
             case 1: {
-                app.change_type();
+                app.change_type(); // zmiana typu danych int / float
                 break;
             }
             case 2: {
-                app.change_size();
+                app.change_size(); // zmiana rozmiaru tablicy
                 break;
             }
             case 3: {
-                app.generate_array();
+                app.generate_array(); // generowanie losowej tablicy
                 break;
             }
             case 4: {
-                app.load_array_from_file();
+                app.load_array_from_file(); // zaladowanie tablicy z pliku
                 break;
             }
             case 5: {
-                app.print_array();
+                app.print_array(); // wypisanie tablicy
                 break;
             }
             case 6: {
-                app.change_sorting_algorithm();
+                app.change_sorting_algorithm(); // zmiana algorytmu sortowania
                 break;
             }
             case 7: {
-                app.sort_array();
+                app.sort_array(); // sortowanie tablicy
                 break;
             }
-            case 8: {
+            case 8: { // porównanie algorytmów; generuje 5 plików
                 std::cout << COMPARE_SORTS;
                 char a;
                 std::cin >> a;
@@ -77,6 +76,7 @@ void menu() {
     } while (option != 0);
 }
 
+// Wyświetlenie aktualnie ustawionych parametrów programu i tablicy
 void Main::print_current_parameters() const {
     std::string t;
     std::string algorithm;
@@ -128,6 +128,7 @@ void Main::print_current_parameters() const {
     std::cout << "Sortowanie " << algorithm << std::endl;
 }
 
+// Zmiana typu tablicy; czyści dane
 void Main::change_type() {
     int_array.clear();
     float_array.clear();
@@ -139,6 +140,7 @@ void Main::change_type() {
     Main::current_type = t;
 }
 
+// Zmiana rozmiaru tablicy; czyści dane
 void Main::change_size() {
     Main::int_array.clear();
     Main::float_array.clear();
@@ -150,12 +152,13 @@ void Main::change_size() {
     Main::array_size = size;
 }
 
+// Funkcja generująca dane do tablicy
 void Main::generate_array() {
     if (Main::current_type == 1) {
         int_array = std::vector<int>(Main::array_size);
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_int_distribution<int> dis(-100, 100);
+        std::uniform_int_distribution<int> dis(-100, 100); // liczby int z zakresu -100 do 100
 
         for (int i = 0; i < Main::array_size; i++) {
             int_array[i] = dis(gen);
@@ -164,7 +167,7 @@ void Main::generate_array() {
         float_array = std::vector<float>(Main::array_size);
         std::random_device rd;
         std::mt19937 gen(rd());
-        std::uniform_real_distribution<float> dis(-100.0, 100.0);
+        std::uniform_real_distribution<float> dis(-100.0, 100.0); // liczby float z zakresu -100 do 100
 
         for (int i = 0; i < Main::array_size; i++) {
             float_array[i] = dis(gen);
@@ -174,6 +177,7 @@ void Main::generate_array() {
     }
 }
 
+// Wczytywanie tablicy z pliku
 void Main::load_array_from_file() {
     std::string filename;
     std::cout << LOAD_FILE;
@@ -185,6 +189,7 @@ void Main::load_array_from_file() {
     }
 }
 
+// Zmiana algorytmu sortowania
 void Main::change_sorting_algorithm() {
     int s;
     do {
@@ -194,6 +199,7 @@ void Main::change_sorting_algorithm() {
     Main::sorting_algorithm = s;
 }
 
+// Funkcja pomocnicza; sortuje i mierzy czas
 template<typename T, typename Sorter>
 void sort_and_print(std::vector<T> &array, Sorter sorter) {
     const auto start = std::chrono::steady_clock::now();
@@ -203,6 +209,7 @@ void sort_and_print(std::vector<T> &array, Sorter sorter) {
     Utilities::print_time(start, end);
 }
 
+// Sortowanie tablicy zgodnie z wybranym typem i algorytmem
 void Main::sort_array() const {
     Main::print_array();
     if (Main::int_array.empty() && Main::float_array.empty()) {
@@ -273,6 +280,7 @@ void Main::sort_array() const {
     }
 }
 
+// Wypisanie zawartosci tablicy
 void Main::print_array() const {
     if (!Main::int_array.empty()) {
         std::cout << PRINT_ARRAY;

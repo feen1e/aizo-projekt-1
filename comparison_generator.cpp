@@ -12,20 +12,22 @@
 #include "quick_sort.h"
 #include "shell_sort.h"
 
+// zmienne globalne do zarzadzania generowaniem
 static int array_generation_method = 0;
 static int index = 1;
 static int file_index = 1;
 static size_t base_size = 10000;
 
+// klasa odpowiedzialna za generowanie porownania
 class Sorting {
 public:
-    int current_type = 1;
-    size_t array_size = 50;
-    int sorting_algorithm = 1;
-    std::vector<int> int_array;
-    std::vector<float> float_array;
-    int sort_duration = 0;
-    std::mt19937 gen = std::mt19937(std::random_device()());
+    int current_type = 1; // typ elementow tablicy
+    size_t array_size = 50; // rozmiar tablicy
+    int sorting_algorithm = 1; // aktualny algorytm sortowania
+    std::vector<int> int_array; // tablica intow
+    std::vector<float> float_array; // tablica floatow
+    int sort_duration = 0; // mierzenie czasu
+    std::mt19937 gen = std::mt19937(std::random_device()()); // generowanie liczb pseudolosowych
 
     void generate_array();
 
@@ -46,15 +48,17 @@ public:
     void sort_100_times_10_increments(std::ofstream &result_file);
 };
 
-
+// generowanie porownania: 5 plikow po 160 linii -> (8 sposobow sortowania * 2 typy danych * 10 roznych rozmiarow) -> sredni czas z kazdego
 void ComparisonGenerator::get_results() {
-    std::filesystem::create_directories("results");
+    std::filesystem::create_directories("results"); // tworzymy katalog results jesli nie istnieje
+    // tworzymy pliki na wyniki
     std::ofstream random_results_file("results/1_random_results.csv");
     std::ofstream sorted_results_file("results/2_sorted_results.csv");
     std::ofstream reversed_results_file("results/3_reversed_results.csv");
     std::ofstream one_third_results_file("results/4_one_third_results.csv");
     std::ofstream two_thirds_results_file("results/5_two_thirds_results.csv");
 
+    // umieszczamy je w wektorze
     std::vector<std::ofstream> results_files;
     results_files.push_back(std::move(random_results_file));
     results_files.push_back(std::move(sorted_results_file));
@@ -62,16 +66,16 @@ void ComparisonGenerator::get_results() {
     results_files.push_back(std::move(one_third_results_file));
     results_files.push_back(std::move(two_thirds_results_file));
 
-    // kolejne sortowania
+    // konfiguracje sortowania
     std::vector<std::tuple<int, int> > sorting_configs = {
         {1, 1}, // int - Insertion sort
         {1, 2}, // Heap sort
-        {1, 3}, // Shell sort S
-        {1, 4}, // Shell sort T
-        {1, 5}, // Quick sort (l)
-        {1, 6}, // Quick sort (r)
-        {1, 7}, // Quick sort (m)
-        {1, 8}, // Quick sort (rand)
+        {1, 3}, // Shell sort Shell
+        {1, 4}, // Shell sort Tokuda
+        {1, 5}, // Quick sort (lewy)
+        {1, 6}, // Quick sort (prawy)
+        {1, 7}, // Quick sort (sredni)
+        {1, 8}, // Quick sort (losowy)
         {2, 1}, // analogicznie ale float
         {2, 2},
         {2, 3},
@@ -86,21 +90,21 @@ void ComparisonGenerator::get_results() {
     file_index = 1;
     array_generation_method = 0;
 
-    std::string header = "typ,liczba elementów,średni czas sortowania,algorytm sortowania\n";
+    std::string header = "typ,liczba elementów,średni czas sortowania,algorytm sortowania\n"; // naglowek
     for (auto &result_file: results_files) {
-        result_file << header;
+        // przechodzenie po kazdym z plikow
+        result_file << header; // zapisujemy naglowek do pliku
         Sorting::generate_results(result_file, sorting_configs);
         result_file.close();
-        array_generation_method++;
+        array_generation_method++; // kolejna metoda generowania: losowe -> posortowane -> odwrotnie -> w 1/3 -> w 2/3
         if (array_generation_method > 4) {
             break;
         }
     }
 }
 
-
-void Sorting::generate_results(std::ofstream &result_file,
-                               const std::vector<std::tuple<int, int> > &sorting_configs) {
+// generuje wyniki dla wszystkich konfiguracji sortowania z sorting_configs
+void Sorting::generate_results(std::ofstream &result_file, const std::vector<std::tuple<int, int> > &sorting_configs) {
     for (const auto &[type, algorithm]: sorting_configs) {
         Sorting sorting_instance;
         sorting_instance.current_type = type;
@@ -114,6 +118,7 @@ void Sorting::generate_results(std::ofstream &result_file,
     file_index++;
 }
 
+// sortowanie tablicy i zwracanie czasu w ms
 template<typename T, typename Sorter>
 int sort_and_get_ms(std::vector<T> &array, Sorter sorter) {
     const auto start = std::chrono::steady_clock::now();
@@ -122,6 +127,7 @@ int sort_and_get_ms(std::vector<T> &array, Sorter sorter) {
     return static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count());
 }
 
+// funkcja generujaca tablice w zaleznosci od aktualnej metody
 void Sorting::generate_array() {
     switch (array_generation_method) {
         case 0: {
@@ -150,6 +156,7 @@ void Sorting::generate_array() {
     }
 }
 
+// generowanie losowych
 void Sorting::generate_random() {
     if (current_type == 1) {
         int_array = std::vector<int>(array_size);
@@ -166,6 +173,7 @@ void Sorting::generate_random() {
     }
 }
 
+// generowanie posortowanych
 void Sorting::generate_sorted() {
     if (current_type == 1) {
         int_array = std::vector<int>(array_size);
@@ -184,6 +192,7 @@ void Sorting::generate_sorted() {
     }
 }
 
+// generowanie posortowanych odwrotnie
 void Sorting::generate_reversed() {
     if (current_type == 1) {
         int_array = std::vector<int>(array_size);
@@ -204,6 +213,7 @@ void Sorting::generate_reversed() {
     }
 }
 
+// generowanie posortowanych w 1/3
 void Sorting::generate_one_third() {
     const size_t third = array_size / 3;
     if (current_type == 1) {
@@ -213,7 +223,7 @@ void Sorting::generate_one_third() {
             int_array[i] = dis(gen);
         }
         std::ranges::sort(int_array);
-        std::shuffle(int_array.begin() + third, int_array.end(), gen);
+        std::shuffle(int_array.begin() + third, int_array.end(), gen); // shuffle elementow od 1/3 do konca
     } else if (current_type == 2) {
         float_array = std::vector<float>(array_size);
         std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
@@ -225,6 +235,7 @@ void Sorting::generate_one_third() {
     }
 }
 
+// generowanie posortowanych w 2/3
 void Sorting::generate_two_thirds() {
     const size_t two_thirds = array_size * 2 / 3;
     if (current_type == 1) {
@@ -234,7 +245,7 @@ void Sorting::generate_two_thirds() {
             int_array[i] = dis(gen);
         }
         std::ranges::sort(int_array);
-        std::shuffle(int_array.begin() + two_thirds, int_array.end(), gen);
+        std::shuffle(int_array.begin() + two_thirds, int_array.end(), gen); // shuffle elementow od 2/3 do konca
     } else if (current_type == 2) {
         float_array = std::vector<float>(array_size);
         std::uniform_real_distribution<float> dis(-1000.0, 1000.0);
@@ -246,6 +257,7 @@ void Sorting::generate_two_thirds() {
     }
 }
 
+// sortowanie w zaleznosci od aktualnej metody
 void Sorting::sort_array() {
     const bool is_int = (current_type == 1);
     std::vector<int> int_array_copy;
@@ -303,17 +315,20 @@ void Sorting::sort_array() {
     }
 }
 
+// wykonuje po 100 sortowan dla 10 roznych rozmiarow, oblicza srednia i zapisuje do pliku
 void Sorting::sort_100_times_10_increments(std::ofstream &result_file) {
     for (int n = 1; n <= 10; n++) {
+        // zmniejszenie rozmiaru tablicy w przypadkach zajmujacych duzo czasu lub dajacych zbyt gleboka rekurencje
         if (sorting_algorithm == 1) {
             array_size = base_size / 10 * n + base_size / 2;
         } else if ((sorting_algorithm == 5 || sorting_algorithm == 6)
                    && (array_generation_method == 1 || array_generation_method == 2 || array_generation_method == 3 ||
                        array_generation_method == 4)) {
             array_size = base_size / 10 * n;
-        } else {
+        } else { // w przeciwnym wypadku rozmiar normalny
             array_size = base_size * n;
         }
+
         double total_sort_duration = 0;
         for (int i = 0; i < 100; i++) {
             generate_array();

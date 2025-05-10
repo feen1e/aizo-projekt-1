@@ -8,13 +8,14 @@
 
 class Utilities {
 public:
+    // wypisanie czasu
     static void print_time(const std::chrono::steady_clock::time_point start, const std::chrono::steady_clock::time_point end) {
         std::cout << "------------------------------------------\n";
         std::cout << "Czas sortowania: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start)
         << " (" << (end - start) << ")." << std::endl;
         std::cout << "------------------------------------------\n";
     }
-
+    // wypisanie tablicy
     template<typename T>
     static void print_array(std::vector<T> array) {
         std::cout << "\n-----------Posortowana tablica------------\n";

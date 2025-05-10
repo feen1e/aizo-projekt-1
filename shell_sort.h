@@ -5,7 +5,7 @@
 #include <algorithm>
 
 
-
+// Sortowanie Shella
 class ShellSort {
 private:
     bool tokudasFormula = false; // false - wzór Shella, true - Tokudy
@@ -21,7 +21,7 @@ private:
             gaps.push_back(gap);
             k++;
         }
-        std::ranges::reverse(gaps); // Reverse to sort gaps in descending order
+        std::ranges::reverse(gaps); // Reverse, żeby kroki były od największego
         return gaps;
     }
 
@@ -32,7 +32,7 @@ public:
     template<typename T>
     void sort(std::vector<T> &array) {
         const int n = array.size();
-        if (!tokudasFormula) {
+        if (!tokudasFormula) { // sekwencja shella
             for (int gap = n / 2; gap > 0; gap /= 2) {
                 for (int i = gap; i < n; i++) {
                     T temp = array[i];
@@ -45,7 +45,7 @@ public:
                     array[j] = temp;
                 }
             }
-        } else {
+        } else { // sekwencja tokudy
             const std::vector<int> gaps = generateTokudaGaps(n);
 
             for (const int gap: gaps) {

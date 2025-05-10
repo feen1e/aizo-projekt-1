@@ -4,7 +4,7 @@
 #include <vector>
 
 
-
+// Sortowanie szybkie
 class QuickSort {
 private:
     int partition_method = 0; // 0 - skrajny lewy, 1 - skrajny prawy, 2 - środkowy, 3 - losowy

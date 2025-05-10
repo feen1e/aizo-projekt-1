@@ -3,7 +3,7 @@
 #include <vector>
 
 
-
+// Sortowanie przez wstawianie
 class InsertionSort {
 public:
     template <typename T>

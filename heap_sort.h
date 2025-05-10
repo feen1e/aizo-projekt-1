@@ -3,7 +3,7 @@
 #include <vector>
 
 
-
+// Sortowanie przez kopcowanie
 class HeapSort {
 private:
     template <typename T>
@@ -19,7 +19,7 @@ private:
         if (right < n && array[right] > array[largest])
             largest = right;
 
-        // zamiana i dalsze kocowanie jesli korzen nie jest najwiekszy
+        // zamiana i dalsze kopcowanie jesli korzen nie jest najwiekszy
         if (largest != i) {
             std::swap(array[i], array[largest]);
             heapify(array, n, largest);
