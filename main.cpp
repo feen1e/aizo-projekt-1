@@ -285,11 +285,11 @@ void Main::print_array() const {
     if (!Main::int_array.empty()) {
         std::cout << PRINT_ARRAY;
         for (int i = 0; i < Main::array_size; i++) {
-            std::cout << int_array[i];
+            printf("%4d", int_array[i]);
             if (i != Main::array_size - 1) {
                 std::cout << ", ";
             }
-            if (i % 10 == 0 && i != 0) {
+            if ((i + 1) % 10 == 0) {
                 std::cout << std::endl;
             }
         }
@@ -297,11 +297,11 @@ void Main::print_array() const {
     } else if (!Main::float_array.empty()) {
         std::cout << PRINT_ARRAY;
         for (int i = 0; i < Main::array_size; i++) {
-            std::cout << float_array[i];
+            printf("%11.6f", float_array[i]);
             if (i != Main::array_size - 1) {
                 std::cout << ", ";
             }
-            if (i % 10 == 0 && i != 0) {
+            if ((i + 1) % 10 == 0) {
                 std::cout << std::endl;
             }
         }

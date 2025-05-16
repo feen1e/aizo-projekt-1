@@ -20,16 +20,29 @@ public:
     static void print_array(std::vector<T> array) {
         std::cout << "\n-----------Posortowana tablica------------\n";
         const int n = array.size();
-        for (int i = 0; i < n; i++) {
-            std::cout << array[i];
-            if (i != n - 1) {
-                std::cout << ", ";
+        if (typeid(T) == typeid(int)) {
+            for (int i = 0; i < n; i++) {
+                printf("%4d", array[i]);
+                if (i != n - 1) {
+                    std::cout << ", ";
+                }
+                if ((i + 1) % 10 == 0) {
+                    std::cout << std::endl;
+                }
             }
-            if (i % 10 == 0 && i != 0) {
-                std::cout << std::endl;
+            std::cout << std::endl;
+        } else if (typeid(T) == typeid(float)) {
+            for (int i = 0; i < n; i++) {
+                printf("%11.6f", array[i]);
+                if (i != n - 1) {
+                    std::cout << ", ";
+                }
+                if ((i + 1) % 10 == 0) {
+                    std::cout << std::endl;
+                }
             }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 };
 
